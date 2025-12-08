@@ -29,11 +29,23 @@ public class ProcedureRepository : IProcedureRepository
         await context.SaveChangesAsync();
     }
 
-    public async Task<Procedure> GetProcedureByName(string procedureName)
+    public async Task<Procedure> GetProcedureById(Guid id)
     {
         using var context = _dbContextFactory.CreateDbContext();
-        return await context.Procedures 
-            .FirstOrDefaultAsync(p => p.Name == procedureName);
+        return await context.Procedures
+                .Include(p => p.Employees)
+                .Include(p => p.Customers)
+                .FirstOrDefaultAsync(p => p.Id == id);
+        
+    }
+
+    public async Task<Procedure> GetProcedureByName(string name)
+    {
+        using var context = _dbContextFactory.CreateDbContext();
+        return await context.Procedures
+            .Include(p => p.Employees)
+            .Include(p => p.Customers)
+            .FirstOrDefaultAsync(p => p.Name == name);
     }
 
     public async Task UpdateProcedure(Procedure procedure)

@@ -26,9 +26,9 @@ public class ProcedureService : IProcedureService
         return procedure;
     }
 
-    public async Task<Procedure> GetProcedureByName(string procedureName)
+    public async Task<Procedure> GetProcedureById(Guid id)
     {
-        return await _procedureRepository.GetProcedureByName(procedureName);
+        return await _procedureRepository.GetProcedureById(id);
     }
 
     public async Task UpdateProcedure(Procedure procedure)

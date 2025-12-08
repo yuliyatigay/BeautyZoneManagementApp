@@ -14,8 +14,7 @@ public static class ContainerConfig
        var connectionString = configuration.GetConnectionString("DefaultConnection");
 
         services.AddDbContextFactory<AppDbContext>(options =>
-            options.UseLazyLoadingProxies()
-                .UseNpgsql(connectionString));
+            options.UseNpgsql(connectionString));
         
         services.AddScoped<ICustomerRepository, CustomerRepository>();
         services.AddScoped<IProcedureRepository, ProcedureRepository>();
@@ -24,4 +23,5 @@ public static class ContainerConfig
         services.AddScoped<IProcedureService, ProcedureService>();
         services.AddScoped<IEmployeeService, EmployeeService>();
     }
+    
 }
