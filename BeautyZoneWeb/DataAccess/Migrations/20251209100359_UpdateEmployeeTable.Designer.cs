@@ -3,6 +3,7 @@ using System;
 using DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251209100359_UpdateEmployeeTable")]
+    partial class UpdateEmployeeTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,72 +25,19 @@ namespace DataAccess.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Models.Account", b =>
+            modelBuilder.Entity("CustomerProcedure", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("CustomersId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.HasIndex("UserName")
-                        .IsUnique();
-
-                    b.ToTable("Accounts", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Models.Appointment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("ProceduresId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CustomerId")
-                        .HasColumnType("uuid");
+                    b.HasKey("CustomersId", "ProceduresId");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
+                    b.HasIndex("ProceduresId");
 
-                    b.Property<Guid>("ProcedureId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CustomerId");
-
-                    b.HasIndex("Date")
-                        .IsUnique();
-
-                    b.HasIndex("ProcedureId");
-
-                    b.ToTable("Appointments", (string)null);
+                    b.ToTable("CustomerProcedure");
                 });
 
             modelBuilder.Entity("Domain.Models.Customer", b =>
@@ -104,9 +54,6 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("ProcedureId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("TelegramId")
                         .IsRequired()
                         .HasColumnType("text");
@@ -115,8 +62,6 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("PhoneNumber")
                         .IsUnique();
-
-                    b.HasIndex("ProcedureId");
 
                     b.ToTable("Customers", (string)null);
                 });
@@ -136,9 +81,6 @@ namespace DataAccess.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PhoneNumber")
-                        .IsUnique();
 
                     b.ToTable("Employees", (string)null);
                 });
@@ -176,30 +118,19 @@ namespace DataAccess.Migrations
                     b.ToTable("EmployeeProcedure");
                 });
 
-            modelBuilder.Entity("Domain.Models.Appointment", b =>
+            modelBuilder.Entity("CustomerProcedure", b =>
                 {
-                    b.HasOne("Domain.Models.Customer", "Customer")
-                        .WithMany("Appointments")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Models.Procedure", "Procedure")
+                    b.HasOne("Domain.Models.Customer", null)
                         .WithMany()
-                        .HasForeignKey("ProcedureId")
+                        .HasForeignKey("CustomersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Customer");
-
-                    b.Navigation("Procedure");
-                });
-
-            modelBuilder.Entity("Domain.Models.Customer", b =>
-                {
                     b.HasOne("Domain.Models.Procedure", null)
-                        .WithMany("Customers")
-                        .HasForeignKey("ProcedureId");
+                        .WithMany()
+                        .HasForeignKey("ProceduresId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("EmployeeProcedure", b =>
@@ -215,16 +146,6 @@ namespace DataAccess.Migrations
                         .HasForeignKey("ProceduresId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Domain.Models.Customer", b =>
-                {
-                    b.Navigation("Appointments");
-                });
-
-            modelBuilder.Entity("Domain.Models.Procedure", b =>
-                {
-                    b.Navigation("Customers");
                 });
 #pragma warning restore 612, 618
         }

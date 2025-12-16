@@ -12,13 +12,15 @@ public class AppDbContext : DbContext
     public DbSet<Procedure> Procedures { get; set; }
     public DbSet<Employee> Employees { get; set; }
     public DbSet<Appointment> Appointments { get; set; }
-    
+    public DbSet<Account> Accounts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Customer>().ToTable("Customers");
         modelBuilder.Entity<Procedure>().ToTable("Procedures");
         modelBuilder.Entity<Employee>().ToTable("Employees");
+        modelBuilder.Entity<Appointment>().ToTable("Appointments");
+        modelBuilder.Entity<Account>().ToTable("Accounts");
 
         modelBuilder.Entity<Appointment>()
             .HasOne(a => a.Customer)
@@ -38,6 +40,13 @@ public class AppDbContext : DbContext
             .IsUnique();
         modelBuilder.Entity<Appointment>()
             .HasIndex(a => a.Date)
+            .IsUnique();
+        modelBuilder.Entity<Account>()
+            .HasIndex(a => a.UserName)
+            .IsUnique();
+
+        modelBuilder.Entity<Account>()
+            .HasIndex(a => a.Email)
             .IsUnique();
     }
 }
