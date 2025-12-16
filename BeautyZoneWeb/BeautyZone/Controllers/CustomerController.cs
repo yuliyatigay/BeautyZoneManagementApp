@@ -25,10 +25,10 @@ public class CustomerController : ControllerBase
         return Ok(customers);
     }
     [HttpGet]
-    [Route("GetCustomerByPhonenumber/{number}")]
-    public async Task<IActionResult> GetCustomerByPhonenumber(string number)
+    [Route("GetCustomerById/{id}")]
+    public async Task<IActionResult> GetCustomerById(Guid id)
     {
-        var customer = await _customerService.GetCustomerByPhonenumber(number);
+        var customer = await _customerService.GetCustomerById(id);
         if (customer == null) 
             return NotFound("Customer not found");
         return Ok(customer);
@@ -40,18 +40,11 @@ public class CustomerController : ControllerBase
     {
         if (customerDto == null) 
             return BadRequest("Customer data must be provided");
-        var procedures = new List<Procedure>();
-        foreach (var id in customerDto.Procedures)
-        {
-            procedures.Add(await _procedureService.GetProcedureById(id));
-        }
-
         var created = new Customer
         {
             Name = customerDto.Name,
             PhoneNumber = customerDto.PhoneNumber,
-            TelegramId = customerDto.TelegramId,
-            Procedures = procedures
+            TelegramId = customerDto.TelegramId
         };
         await _customerService.CreateCustomer(created);
         return CreatedAtAction(nameof(AddCustomer), new Customer { Name = customerDto.Name }, created);
@@ -63,18 +56,12 @@ public class CustomerController : ControllerBase
     {
         if (customerDto == null)
             return BadRequest("No data was provided");
-        var procedures = new List<Procedure>();
-        foreach (var procedureId in customerDto.Procedures)
-        {
-            procedures.Add(await _procedureService.GetProcedureById(procedureId));
-        }
         var updated = new Customer
         {
             Name = customerDto.Name,
             PhoneNumber = customerDto.PhoneNumber,
             TelegramId = customerDto.TelegramId,
-            Id = id,
-            Procedures = procedures
+            Id = id
         };
         await _customerService.UpdateCustomer(updated);
         return Ok(updated);

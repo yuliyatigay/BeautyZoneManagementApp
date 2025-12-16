@@ -24,8 +24,8 @@ public class ProcedureController : ControllerBase
         return Ok(procedures);
     }
     [HttpGet]
-    [Route("GetProcedureByName/{id}")]
-    public async Task<IActionResult> GetProcedureByName(Guid id)
+    [Route("GetProcedureById/{id}")]
+    public async Task<IActionResult> GetProcedureById(Guid id)
     {
         var procedure = await _procedureService.GetProcedureById(id);
         if (procedure == null) 
@@ -46,7 +46,7 @@ public class ProcedureController : ControllerBase
             });
         if (created == null) 
             return BadRequest("Procedure not created.");
-        return CreatedAtAction(nameof(GetProcedureByName), new { procedureName = procedure.Name }, created);
+        return CreatedAtAction(nameof(GetProcedureById), new { id = created.Id }, created);
     }
     [HttpPut]
     [Route("UpdateProcedure/{id}")]

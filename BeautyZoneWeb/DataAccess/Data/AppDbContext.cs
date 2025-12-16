@@ -11,7 +11,7 @@ public class AppDbContext : DbContext
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Procedure> Procedures { get; set; }
     public DbSet<Employee> Employees { get; set; }
-
+    public DbSet<Appointment> Appointments { get; set; }
     
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -20,9 +20,10 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Procedure>().ToTable("Procedures");
         modelBuilder.Entity<Employee>().ToTable("Employees");
 
-        modelBuilder.Entity<Procedure>()
-            .HasMany(p => p.Customers)
-            .WithMany(c => c.Procedures);
+        modelBuilder.Entity<Appointment>()
+            .HasOne(a => a.Customer)
+            .WithMany(c => c.Appointments)
+            .HasForeignKey(c => c.CustomerId);
         modelBuilder.Entity<Procedure>()
             .HasMany(m => m.Employees)
             .WithMany(m => m.Procedures);
@@ -31,6 +32,12 @@ public class AppDbContext : DbContext
             .IsUnique();
         modelBuilder.Entity<Customer>()
             .HasIndex(m => m.PhoneNumber)
+            .IsUnique();
+        modelBuilder.Entity<Employee>()
+            .HasIndex(m => m.PhoneNumber)
+            .IsUnique();
+        modelBuilder.Entity<Appointment>()
+            .HasIndex(a => a.Date)
             .IsUnique();
     }
 }

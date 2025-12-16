@@ -16,9 +16,9 @@ public class CustomerService : ICustomerService
         return await _customerRepository.GetAllCustomers();
     }
 
-    public async Task<Customer> GetCustomerByPhonenumber(string number)
+    public async Task<Customer> GetCustomerById(Guid id)
     {
-        return await _customerRepository.GetCustomerByPhonenumber(number);
+        return await _customerRepository.GetCustomerById(id);
     }
 
     public async Task CreateCustomer(Customer customer)

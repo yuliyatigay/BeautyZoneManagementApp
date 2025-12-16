@@ -5,5 +5,4 @@ public class CustomerDto
     public string Name { get; set; }
     public string PhoneNumber { get; set; }
     public string TelegramId { get; set; }
-    public virtual List<Guid> Procedures { get; set; }
 }

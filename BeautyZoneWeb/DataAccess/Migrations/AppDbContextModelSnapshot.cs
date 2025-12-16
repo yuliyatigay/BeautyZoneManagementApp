@@ -22,19 +22,31 @@ namespace DataAccess.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("CustomerProcedure", b =>
+            modelBuilder.Entity("Domain.Models.Appointment", b =>
                 {
-                    b.Property<Guid>("CustomersId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ProceduresId")
+                    b.Property<Guid>("CustomerId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("CustomersId", "ProceduresId");
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.HasIndex("ProceduresId");
+                    b.Property<Guid>("ProcedureId")
+                        .HasColumnType("uuid");
 
-                    b.ToTable("CustomerProcedure");
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("Date")
+                        .IsUnique();
+
+                    b.HasIndex("ProcedureId");
+
+                    b.ToTable("Appointments");
                 });
 
             modelBuilder.Entity("Domain.Models.Customer", b =>
@@ -51,6 +63,9 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<Guid?>("ProcedureId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("TelegramId")
                         .IsRequired()
                         .HasColumnType("text");
@@ -59,6 +74,8 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("PhoneNumber")
                         .IsUnique();
+
+                    b.HasIndex("ProcedureId");
 
                     b.ToTable("Customers", (string)null);
                 });
@@ -73,7 +90,14 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("PhoneNumber")
+                        .IsUnique();
 
                     b.ToTable("Employees", (string)null);
                 });
@@ -111,19 +135,30 @@ namespace DataAccess.Migrations
                     b.ToTable("EmployeeProcedure");
                 });
 
-            modelBuilder.Entity("CustomerProcedure", b =>
+            modelBuilder.Entity("Domain.Models.Appointment", b =>
                 {
-                    b.HasOne("Domain.Models.Customer", null)
-                        .WithMany()
-                        .HasForeignKey("CustomersId")
+                    b.HasOne("Domain.Models.Customer", "Customer")
+                        .WithMany("Appointments")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Models.Procedure", null)
+                    b.HasOne("Domain.Models.Procedure", "Procedure")
                         .WithMany()
-                        .HasForeignKey("ProceduresId")
+                        .HasForeignKey("ProcedureId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Procedure");
+                });
+
+            modelBuilder.Entity("Domain.Models.Customer", b =>
+                {
+                    b.HasOne("Domain.Models.Procedure", null)
+                        .WithMany("Customers")
+                        .HasForeignKey("ProcedureId");
                 });
 
             modelBuilder.Entity("EmployeeProcedure", b =>
@@ -139,6 +174,16 @@ namespace DataAccess.Migrations
                         .HasForeignKey("ProceduresId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Models.Customer", b =>
+                {
+                    b.Navigation("Appointments");
+                });
+
+            modelBuilder.Entity("Domain.Models.Procedure", b =>
+                {
+                    b.Navigation("Customers");
                 });
 #pragma warning restore 612, 618
         }

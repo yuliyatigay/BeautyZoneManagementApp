@@ -16,9 +16,13 @@ public class EmployeeService : IEmployeeService
         return await _employeeRepository.GetAllEmployees();
     }
 
-    public async Task CreateEmployee(Employee employee)
+    public async Task<Employee> CreateEmployee(Employee employee)
     {
+        var existing = await _employeeRepository.GetEmployeeByPhonenumber(employee.PhoneNumber);
+        if (existing != null)
+            return existing; 
         await _employeeRepository.CreateEmployee(employee);
+        return employee;
     }
 
     public async Task<Employee> GetEmployeeById(Guid Id)

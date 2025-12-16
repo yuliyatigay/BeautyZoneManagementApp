@@ -10,10 +10,11 @@ namespace BeautyZone.Controllers;
 public class EmployeeController : ControllerBase
 {
     private readonly IEmployeeService _employeeService;
-
-    public EmployeeController(IEmployeeService employeeService)
+    private readonly IProcedureService _procedureService;
+    public EmployeeController(IEmployeeService employeeService, IProcedureService procedureService)
     {
         _employeeService = employeeService;
+        _procedureService = procedureService;
     }
 
     [HttpGet]
@@ -27,8 +28,8 @@ public class EmployeeController : ControllerBase
     }
 
     [HttpGet]
-    [Route("GetEmployeeByName/{Id}")]
-    public async Task<IActionResult> GetEmployeeByName(Guid Id)
+    [Route("GetEmployeeById/{Id}")]
+    public async Task<IActionResult> GetEmployeeById(Guid Id)
     {
         var employee = await _employeeService.GetEmployeeById(Id);
         if (employee == null)
@@ -44,10 +45,14 @@ public class EmployeeController : ControllerBase
             return BadRequest("Employee data must be provided");
         var created = new Employee
         {
-            Name = employeeDto.Name
+            Name = employeeDto.Name,
+            PhoneNumber = employeeDto.PhoneNumber,
+            Procedures = employeeDto.Procedures
+                .Select(id => new Procedure { Id = id })   
+                .ToList()
         };
         await _employeeService.CreateEmployee(created);
-        return CreatedAtAction(nameof(AddEmployee), new Employee { Name = employeeDto.Name }, created);
+        return CreatedAtAction(nameof(GetEmployeeById), new { id = created.Id }, created);
     }
 
     [HttpPut]
@@ -58,8 +63,12 @@ public class EmployeeController : ControllerBase
             return BadRequest("Employee data must be provided");
         var updated = new Employee
         {
+            Id = id,
             Name = employeeDto.Name,
-            Id = id
+            PhoneNumber = employeeDto.PhoneNumber,
+            Procedures = employeeDto.Procedures
+                .Select(id => new Procedure { Id = id })   
+                .ToList()
         };
         await _employeeService.UpdateEmployee(updated);
         return Ok(updated);

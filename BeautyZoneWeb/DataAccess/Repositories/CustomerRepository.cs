@@ -19,20 +19,16 @@ public class CustomerRepository : ICustomerRepository
         return await context.Customers.ToListAsync();
     }
 
-    public async Task<Customer> GetCustomerByPhonenumber(string number)
+    public async Task<Customer> GetCustomerById(Guid id)
     {
         using var context = _dbContextFactory.CreateDbContext();
         return await context.Customers
-            .FirstOrDefaultAsync(c => c.PhoneNumber == number);
+            .FirstOrDefaultAsync(c => c.Id == id);
     }
 
     public async Task CreateCustomer(Customer customer)
     {
         using var context = _dbContextFactory.CreateDbContext();
-        foreach (var procedure in customer.Procedures)
-        {
-            context.Attach(procedure);
-        }
         await context.Customers.AddAsync(customer);
         await context.SaveChangesAsync();
     }
