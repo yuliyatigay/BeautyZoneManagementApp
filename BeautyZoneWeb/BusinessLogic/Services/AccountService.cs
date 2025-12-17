@@ -29,7 +29,7 @@ public class AccountService : IAccountService
                 (e => e.ErrorMessage)));
         var hashed = new PasswordHasher<Account>().HashPassword(account, account.PasswordHash);
         account.PasswordHash = hashed;
-        account.Role = "user";
+        account.Role = "admin";
         await _accountRepository.Register(account);
     }
 

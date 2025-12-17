@@ -1,10 +1,11 @@
 using BeautyZone.Dtos;
 using Domain.Models;
 using Domain.ServicesInterfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BeautyZone.Controllers;
-
+[Authorize(Roles = "admin")]
 [Route("api/[controller]")]
 [ApiController]
 public class ProcedureController : ControllerBase
