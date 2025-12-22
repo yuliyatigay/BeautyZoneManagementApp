@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLogic", "BusinessLo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeautyZone", "BeautyZone\BeautyZone.csproj", "{18929F61-5004-4ED8-ACF2-9C8FAF536A54}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeautyZoneTests", "BeautyZoneTests\BeautyZoneTests.csproj", "{FB59FE91-8D9A-4E35-8AFF-B95D470A2B6E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{18929F61-5004-4ED8-ACF2-9C8FAF536A54}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18929F61-5004-4ED8-ACF2-9C8FAF536A54}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18929F61-5004-4ED8-ACF2-9C8FAF536A54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB59FE91-8D9A-4E35-8AFF-B95D470A2B6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB59FE91-8D9A-4E35-8AFF-B95D470A2B6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB59FE91-8D9A-4E35-8AFF-B95D470A2B6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB59FE91-8D9A-4E35-8AFF-B95D470A2B6E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

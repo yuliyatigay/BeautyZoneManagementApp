@@ -10,24 +10,18 @@ public class AppDbContext : DbContext
 
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Procedure> Procedures { get; set; }
-    public DbSet<Employee> Employees { get; set; }
-    public DbSet<Appointment> Appointments { get; set; }
+    public DbSet<BeautyTech> BeautyTechs { get; set; }
     public DbSet<Account> Accounts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Customer>().ToTable("Customers");
         modelBuilder.Entity<Procedure>().ToTable("Procedures");
-        modelBuilder.Entity<Employee>().ToTable("Employees");
-        modelBuilder.Entity<Appointment>().ToTable("Appointments");
+        modelBuilder.Entity<BeautyTech>().ToTable("BeautyTechs");
         modelBuilder.Entity<Account>().ToTable("Accounts");
 
-        modelBuilder.Entity<Appointment>()
-            .HasOne(a => a.Customer)
-            .WithMany(c => c.Appointments)
-            .HasForeignKey(c => c.CustomerId);
         modelBuilder.Entity<Procedure>()
-            .HasMany(m => m.Employees)
+            .HasMany(m => m.BeautyTechs)
             .WithMany(m => m.Procedures);
         modelBuilder.Entity<Procedure>()
             .HasIndex(p => p.Name)
@@ -35,11 +29,8 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Customer>()
             .HasIndex(m => m.PhoneNumber)
             .IsUnique();
-        modelBuilder.Entity<Employee>()
+        modelBuilder.Entity<BeautyTech>()
             .HasIndex(m => m.PhoneNumber)
-            .IsUnique();
-        modelBuilder.Entity<Appointment>()
-            .HasIndex(a => a.Date)
             .IsUnique();
         modelBuilder.Entity<Account>()
             .HasIndex(a => a.UserName)

@@ -15,11 +15,8 @@ public class ProcedureRepository : IProcedureRepository
     }
     public async Task<List<Procedure>> GetAllProcedures()
     {
-        using var context = _dbContextFactory.CreateDbContext();
-        return await context.Procedures.
-            Include(p => p.Employees).
-            Include(p => p.Customers).
-            ToListAsync();
+        var context = _dbContextFactory.CreateDbContext();
+        return await context.Procedures.ToListAsync();
     }
 
     public async Task CreateProcedure(Procedure procedure)
@@ -33,7 +30,7 @@ public class ProcedureRepository : IProcedureRepository
     {
         using var context = _dbContextFactory.CreateDbContext();
         return await context.Procedures
-                .Include(p => p.Employees)
+                .Include(p => p.BeautyTechs)
                 .Include(p => p.Customers)
                 .FirstOrDefaultAsync(p => p.Id == id);
         
@@ -43,7 +40,7 @@ public class ProcedureRepository : IProcedureRepository
     {
         using var context = _dbContextFactory.CreateDbContext();
         return await context.Procedures
-            .Include(p => p.Employees)
+            .Include(p => p.BeautyTechs)
             .Include(p => p.Customers)
             .FirstOrDefaultAsync(p => p.Name == name);
     }
