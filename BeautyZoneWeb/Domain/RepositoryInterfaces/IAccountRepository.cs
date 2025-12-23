@@ -4,6 +4,6 @@ namespace Domain.RepositoryInterfaces;
 
 public interface IAccountRepository
 {
-    Task Register(Account account);
+    Task CreateAccount(Account account);
     Task<Account> GetByEmail(string email);
 }

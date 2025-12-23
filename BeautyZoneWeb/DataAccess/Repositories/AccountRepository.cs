@@ -12,7 +12,7 @@ public class AccountRepository : IAccountRepository
     {
         _dbContextFactory = dbContextFactory;
     }
-    public async Task Register(Account account)
+    public async Task CreateAccount(Account account)
     {
         var context = _dbContextFactory.CreateDbContext();
         await context.Accounts.AddAsync(account);

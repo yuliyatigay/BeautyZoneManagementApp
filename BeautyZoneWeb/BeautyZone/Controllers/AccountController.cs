@@ -15,7 +15,7 @@ public class AccountController : ControllerBase
     {
         _accountService = accountService;
     }
-    [HttpPost("Register")]
+    [HttpPost("CreateAccount")]
     public async Task<IActionResult> Register([FromBody] RegisterDto request)
     {
         var account = new Account

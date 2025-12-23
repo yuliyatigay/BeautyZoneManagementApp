@@ -30,7 +30,7 @@ public class AccountService : IAccountService
         var hashed = new PasswordHasher<Account>().HashPassword(account, account.PasswordHash);
         account.PasswordHash = hashed;
         account.Role = "user";
-        await _accountRepository.Register(account);
+        await _accountRepository.CreateAccount(account);
     }
 
     public async Task<string> LoginAsync(string email, string password)

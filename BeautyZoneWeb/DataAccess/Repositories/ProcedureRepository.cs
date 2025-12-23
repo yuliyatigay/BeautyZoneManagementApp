@@ -21,7 +21,7 @@ public class ProcedureRepository : IProcedureRepository
 
     public async Task CreateProcedure(Procedure procedure)
     {
-        using var context = _dbContextFactory.CreateDbContext();
+        var context = _dbContextFactory.CreateDbContext();
         await context.Procedures.AddAsync(procedure);
         await context.SaveChangesAsync();
     }
