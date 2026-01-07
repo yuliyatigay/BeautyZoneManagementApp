@@ -1,3 +1,4 @@
+using Domain.Enums;
 using Domain.Models;
 using Domain.RepositoryInterfaces;
 using Domain.ServicesInterfaces;
@@ -29,7 +30,7 @@ public class AccountService : IAccountService
                 (e => e.ErrorMessage)));
         var hashed = new PasswordHasher<Account>().HashPassword(account, account.PasswordHash);
         account.PasswordHash = hashed;
-        account.Role = "user";
+        account.Role = UserRole.user;
         await _accountRepository.CreateAccount(account);
     }
 
@@ -49,5 +50,29 @@ public class AccountService : IAccountService
         }
         var response = _jwtService.GenerateJwtToken(account);
         return response;
+    }
+
+    public async Task UpdateAccount(Account updated)
+    {
+        await _accountRepository.UpdateAccount(updated);
+    }
+
+    public async Task<List<Account>> GetAllAccounts()
+    {
+        return await _accountRepository.GetAllAccounts();
+    }
+
+    public async Task<Account> GetById(Guid id)
+    {
+        var account = await _accountRepository.GetById(id);
+        if (account is null)
+            throw new ArgumentException("Account not found");
+        return account;
+    }
+
+    public async Task DeleteAccount(Guid id)
+    {
+        var account = await _accountRepository.GetById(id);
+        await _accountRepository.DeleteAccount(account);
     }
 }

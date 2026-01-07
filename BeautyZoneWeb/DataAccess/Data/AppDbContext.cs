@@ -19,6 +19,10 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Procedure>().ToTable("Procedures");
         modelBuilder.Entity<BeautyTech>().ToTable("BeautyTechs");
         modelBuilder.Entity<Account>().ToTable("Accounts");
+        
+        modelBuilder.Entity<Account>()
+            .Property(a => a.Role)
+            .HasConversion<int>();
 
         modelBuilder.Entity<Procedure>()
             .HasMany(m => m.BeautyTechs)
