@@ -2,14 +2,38 @@ using BeautyZone;
 using DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.ConfigureServices(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.EnableAnnotations();
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "JWT Authorization header using the Bearer scheme."
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme, Id = "Bearer"
+                },
+                Scheme = "oauth2", Name = "Bearer", In = ParameterLocation.Header
+            },
+            new List<string>()
+        }
+    });
 });
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -18,6 +42,7 @@ builder.Services.AddControllers()
     });
 
 var app = builder.Build();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -28,20 +53,5 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-    var pendingMigrations = dbContext.Database.GetPendingMigrations();
-    if (pendingMigrations.Any())
-    {
-        Console.WriteLine("Applying pending migrations...");
-        dbContext.Database.Migrate();
-        Console.WriteLine("Migrations applied successfully.");
-    }
-    else
-    {
-        Console.WriteLine("No pending migrations found.");
-    }
-}
 app.Run();

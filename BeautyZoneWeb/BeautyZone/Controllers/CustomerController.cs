@@ -46,7 +46,6 @@ public class CustomerController : ControllerBase
         {
             Name = customerDto.Name,
             PhoneNumber = customerDto.PhoneNumber,
-            TelegramId = customerDto.TelegramId
         };
         await _customerService.CreateCustomer(created);
         return CreatedAtAction(nameof(AddCustomer), new Customer { Name = customerDto.Name }, created);
@@ -62,7 +61,6 @@ public class CustomerController : ControllerBase
         {
             Name = customerDto.Name,
             PhoneNumber = customerDto.PhoneNumber,
-            TelegramId = customerDto.TelegramId,
             Id = id
         };
         await _customerService.UpdateCustomer(updated);

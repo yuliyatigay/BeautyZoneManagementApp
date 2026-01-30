@@ -1,3 +1,4 @@
+using Domain.Enums;
 using Domain.Models;
 using Domain.RepositoryInterfaces;
 using Domain.ServicesInterfaces;
@@ -29,11 +30,11 @@ public class AccountService : IAccountService
                 (e => e.ErrorMessage)));
         var hashed = new PasswordHasher<Account>().HashPassword(account, account.PasswordHash);
         account.PasswordHash = hashed;
-        account.Role = "admin";
-        await _accountRepository.Register(account);
+        account.Role = UserRole.user;
+        await _accountRepository.CreateAccount(account);
     }
 
-    public async Task<string> LoginAsync(string email, string password)
+    public async Task<UserResponse> LoginAsync(string email, string password)
     {
         var account = await _accountRepository.GetByEmail(email);
         if (account is null)
@@ -47,7 +48,37 @@ public class AccountService : IAccountService
         {
             throw new ArgumentException("Invalid username or password");
         }
-        var response = _jwtService.GenerateJwtToken(account);
+        var token = _jwtService.GenerateJwtToken(account);
+        var response = new UserResponse
+        {
+            AccessToken = token,
+            Role = account.Role,
+            Email = account.Email,
+        };
         return response;
+    }
+
+    public async Task UpdateAccount(Account updated)
+    {
+        await _accountRepository.UpdateAccount(updated);
+    }
+
+    public async Task<List<Account>> GetAllAccounts()
+    {
+        return await _accountRepository.GetAllAccounts();
+    }
+
+    public async Task<Account> GetById(Guid id)
+    {
+        var account = await _accountRepository.GetById(id);
+        if (account is null)
+            throw new ArgumentException("Account not found");
+        return account;
+    }
+
+    public async Task DeleteAccount(Guid id)
+    {
+        var account = await _accountRepository.GetById(id);
+        await _accountRepository.DeleteAccount(account);
     }
 }

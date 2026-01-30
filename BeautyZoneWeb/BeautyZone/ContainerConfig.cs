@@ -20,8 +20,12 @@ public static class ContainerConfig
     {
        var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-        services.AddDbContextFactory<AppDbContext>(options =>
-            options.UseNpgsql(connectionString));
+       services.AddDbContextFactory<AppDbContext>(options =>
+       {
+           options.UseNpgsql(connectionString)
+               .UseLazyLoadingProxies();
+       });
+       
         
         services.Configure<AuthSettings>(configuration.GetSection("AuthSettings"));
         
@@ -43,11 +47,12 @@ public static class ContainerConfig
         
         services.AddScoped<ICustomerRepository, CustomerRepository>();
         services.AddScoped<IProcedureRepository, ProcedureRepository>();
-        services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+        services.AddScoped<IBeautyTechRepository, BeautyTechRepository>();
         services.AddScoped<IAccountRepository, AccountRepository>();
+        
         services.AddScoped<ICustomerService, CustomerService>();
         services.AddScoped<IProcedureService, ProcedureService>();
-        services.AddScoped<IEmployeeService, EmployeeService>();
+        services.AddScoped<IBeautyTechService, BeautyTechService>();
         services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<IAccountService, AccountService>();
         

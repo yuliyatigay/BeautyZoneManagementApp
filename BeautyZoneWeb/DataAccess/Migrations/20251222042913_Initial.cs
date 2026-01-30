@@ -12,29 +12,33 @@ namespace DataAccess.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Customers",
+                name: "Accounts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    FirstName = table.Column<string>(type: "text", nullable: false),
+                    LastName = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    Role = table.Column<string>(type: "text", nullable: false),
+                    UserName = table.Column<string>(type: "text", nullable: false),
+                    PasswordHash = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Accounts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BeautyTechs",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "text", nullable: false),
-                    TelegramId = table.Column<string>(type: "text", nullable: false)
+                    PhoneNumber = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Customers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Employees",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Employees", x => x.Id);
+                    table.PrimaryKey("PK_BeautyTechs", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -50,23 +54,23 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CustomerProcedure",
+                name: "BeautyTechProcedure",
                 columns: table => new
                 {
-                    CustomersId = table.Column<Guid>(type: "uuid", nullable: false),
+                    BeautyTechsId = table.Column<Guid>(type: "uuid", nullable: false),
                     ProceduresId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CustomerProcedure", x => new { x.CustomersId, x.ProceduresId });
+                    table.PrimaryKey("PK_BeautyTechProcedure", x => new { x.BeautyTechsId, x.ProceduresId });
                     table.ForeignKey(
-                        name: "FK_CustomerProcedure_Customers_CustomersId",
-                        column: x => x.CustomersId,
-                        principalTable: "Customers",
+                        name: "FK_BeautyTechProcedure_BeautyTechs_BeautyTechsId",
+                        column: x => x.BeautyTechsId,
+                        principalTable: "BeautyTechs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CustomerProcedure_Procedures_ProceduresId",
+                        name: "FK_BeautyTechProcedure_Procedures_ProceduresId",
                         column: x => x.ProceduresId,
                         principalTable: "Procedures",
                         principalColumn: "Id",
@@ -74,33 +78,46 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "EmployeeProcedure",
+                name: "Customers",
                 columns: table => new
                 {
-                    EmployeesId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProceduresId = table.Column<Guid>(type: "uuid", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "text", nullable: false),
+                    ProcedureId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EmployeeProcedure", x => new { x.EmployeesId, x.ProceduresId });
+                    table.PrimaryKey("PK_Customers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_EmployeeProcedure_Employees_EmployeesId",
-                        column: x => x.EmployeesId,
-                        principalTable: "Employees",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_EmployeeProcedure_Procedures_ProceduresId",
-                        column: x => x.ProceduresId,
+                        name: "FK_Customers_Procedures_ProcedureId",
+                        column: x => x.ProcedureId,
                         principalTable: "Procedures",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CustomerProcedure_ProceduresId",
-                table: "CustomerProcedure",
+                name: "IX_Accounts_Email",
+                table: "Accounts",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Accounts_UserName",
+                table: "Accounts",
+                column: "UserName",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BeautyTechProcedure_ProceduresId",
+                table: "BeautyTechProcedure",
                 column: "ProceduresId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BeautyTechs_PhoneNumber",
+                table: "BeautyTechs",
+                column: "PhoneNumber",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Customers_PhoneNumber",
@@ -109,9 +126,9 @@ namespace DataAccess.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_EmployeeProcedure_ProceduresId",
-                table: "EmployeeProcedure",
-                column: "ProceduresId");
+                name: "IX_Customers_ProcedureId",
+                table: "Customers",
+                column: "ProcedureId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Procedures_Name",
@@ -124,16 +141,16 @@ namespace DataAccess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CustomerProcedure");
+                name: "Accounts");
 
             migrationBuilder.DropTable(
-                name: "EmployeeProcedure");
+                name: "BeautyTechProcedure");
 
             migrationBuilder.DropTable(
                 name: "Customers");
 
             migrationBuilder.DropTable(
-                name: "Employees");
+                name: "BeautyTechs");
 
             migrationBuilder.DropTable(
                 name: "Procedures");

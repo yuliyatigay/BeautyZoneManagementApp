@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251209100359_UpdateEmployeeTable")]
-    partial class UpdateEmployeeTable
+    [Migration("20260107115442_newMigration")]
+    partial class newMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,23 +21,88 @@ namespace DataAccess.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.22")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("CustomerProcedure", b =>
+            modelBuilder.Entity("BeautyTechProcedure", b =>
                 {
-                    b.Property<Guid>("CustomersId")
+                    b.Property<Guid>("BeautyTechsId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("ProceduresId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("CustomersId", "ProceduresId");
+                    b.HasKey("BeautyTechsId", "ProceduresId");
 
                     b.HasIndex("ProceduresId");
 
-                    b.ToTable("CustomerProcedure");
+                    b.ToTable("BeautyTechProcedure");
+                });
+
+            modelBuilder.Entity("Domain.Models.Account", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("UserName")
+                        .IsUnique();
+
+                    b.ToTable("Accounts", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Models.BeautyTech", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PhoneNumber")
+                        .IsUnique();
+
+                    b.ToTable("BeautyTechs", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.Customer", b =>
@@ -54,35 +119,17 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("TelegramId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid?>("ProcedureId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PhoneNumber")
                         .IsUnique();
 
+                    b.HasIndex("ProcedureId");
+
                     b.ToTable("Customers", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Models.Employee", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Employees", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.Procedure", b =>
@@ -103,26 +150,11 @@ namespace DataAccess.Migrations
                     b.ToTable("Procedures", (string)null);
                 });
 
-            modelBuilder.Entity("EmployeeProcedure", b =>
+            modelBuilder.Entity("BeautyTechProcedure", b =>
                 {
-                    b.Property<Guid>("EmployeesId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ProceduresId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("EmployeesId", "ProceduresId");
-
-                    b.HasIndex("ProceduresId");
-
-                    b.ToTable("EmployeeProcedure");
-                });
-
-            modelBuilder.Entity("CustomerProcedure", b =>
-                {
-                    b.HasOne("Domain.Models.Customer", null)
+                    b.HasOne("Domain.Models.BeautyTech", null)
                         .WithMany()
-                        .HasForeignKey("CustomersId")
+                        .HasForeignKey("BeautyTechsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -133,19 +165,16 @@ namespace DataAccess.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("EmployeeProcedure", b =>
+            modelBuilder.Entity("Domain.Models.Customer", b =>
                 {
-                    b.HasOne("Domain.Models.Employee", null)
-                        .WithMany()
-                        .HasForeignKey("EmployeesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Domain.Models.Procedure", null)
-                        .WithMany()
-                        .HasForeignKey("ProceduresId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Customers")
+                        .HasForeignKey("ProcedureId");
+                });
+
+            modelBuilder.Entity("Domain.Models.Procedure", b =>
+                {
+                    b.Navigation("Customers");
                 });
 #pragma warning restore 612, 618
         }

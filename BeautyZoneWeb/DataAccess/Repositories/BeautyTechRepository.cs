@@ -5,66 +5,66 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repositories;
 
-public class EmployeeRepository : IEmployeeRepository
+public class BeautyTechRepository : IBeautyTechRepository
 {
     private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
 
-    public EmployeeRepository(IDbContextFactory<AppDbContext> dbContextFactory)
+    public BeautyTechRepository(IDbContextFactory<AppDbContext> dbContextFactory)
     {
         _dbContextFactory = dbContextFactory;
     }
-    public async Task<List<Employee>> GetAllEmployees()
+    public async Task<List<BeautyTech>> FetchAllBeautyTechs()
     {
         var context = _dbContextFactory.CreateDbContext();
-        return await context.Employees
+        return await context.BeautyTechs
             .Include(p => p.Procedures)
             .ToListAsync();
     }
 
-    public async Task CreateEmployee(Employee employee)
+    public async Task AddBeautyTechAsync(BeautyTech beautyTech)
     {
         var context = _dbContextFactory.CreateDbContext();
         
-        foreach (var procedure in employee.Procedures)
+        foreach (var procedure in beautyTech.Procedures)
         {
             context.Attach(procedure);
         }
 
-        context.Employees.AddAsync(employee);
+        context.BeautyTechs.AddAsync(beautyTech);
         await context.SaveChangesAsync();
     }
 
-    public async Task<Employee> GetEmployeeById(Guid id)
+    public async Task<BeautyTech> GetBeautyTechById(Guid id)
     {
         var context = _dbContextFactory.CreateDbContext();
-        return await context.Employees.
+        return await context.BeautyTechs.
             Include(p => p.Procedures).
             FirstOrDefaultAsync(e => e.Id == id);
     }
 
-    public Task<Employee> GetEmployeeByPhonenumber(string number)
+    public Task<BeautyTech> GetBeautyTechByPhoneNumber(string number)
     {
         var context = _dbContextFactory.CreateDbContext();
-        return context.Employees
+        return context.BeautyTechs
             .Include(e => e.Procedures)
             .FirstOrDefaultAsync(e => e.PhoneNumber == number);
     }
 
-    public async Task<List<Employee>> GetEmployeesByProcedure(string procedureName)
+    public async Task<List<BeautyTech>> FetchBeautyTechsByProcedureName(string procedureName)
     {
         var context = _dbContextFactory.CreateDbContext();
-        return await context.Employees.
+        return await context.BeautyTechs.
             Where(e => e.Procedures.
                 Any(p => p.Name == procedureName)).
             ToListAsync();
     }
 
 
-    public async Task UpdateEmployee(Employee master)
+    public async Task UpdateBeautyTechAsync(BeautyTech master)
     {
         var context = _dbContextFactory.CreateDbContext();
 
-        var existing = await context.Employees
+        var existing = await context.BeautyTechs
             .Include(e => e.Procedures)
             .FirstOrDefaultAsync(e => e.Id == master.Id);
         existing.Name = master.Name;
@@ -83,10 +83,10 @@ public class EmployeeRepository : IEmployeeRepository
         await context.SaveChangesAsync();
     }
 
-    public async Task DeleteEmployee(Employee master)
+    public async Task DeleteBeautyTechAsync(BeautyTech master)
     {
         var context = _dbContextFactory.CreateDbContext();
-        context.Employees.Remove(master);
+        context.BeautyTechs.Remove(master);
         await context.SaveChangesAsync();
     }
 }
