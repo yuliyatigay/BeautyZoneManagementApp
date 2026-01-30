@@ -6,7 +6,7 @@ namespace Domain.ServicesInterfaces;
 public interface IAccountService
 {
     Task RegisterAsync(Account account);
-    Task<string> LoginAsync(string email, string password);
+    Task<UserResponse> LoginAsync(string email, string password);
     Task UpdateAccount(Account account);
     Task<List<Account>> GetAllAccounts();
     Task<Account> GetById(Guid id);

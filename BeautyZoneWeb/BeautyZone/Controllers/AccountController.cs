@@ -47,9 +47,8 @@ public class AccountController : ControllerBase
         }
         catch (ArgumentException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new { error = e.Message });
         }
-        
     }
 
     [Authorize(Roles = "admin")]

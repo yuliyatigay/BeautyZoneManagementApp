@@ -34,7 +34,7 @@ public class AccountService : IAccountService
         await _accountRepository.CreateAccount(account);
     }
 
-    public async Task<string> LoginAsync(string email, string password)
+    public async Task<UserResponse> LoginAsync(string email, string password)
     {
         var account = await _accountRepository.GetByEmail(email);
         if (account is null)
@@ -48,7 +48,13 @@ public class AccountService : IAccountService
         {
             throw new ArgumentException("Invalid username or password");
         }
-        var response = _jwtService.GenerateJwtToken(account);
+        var token = _jwtService.GenerateJwtToken(account);
+        var response = new UserResponse
+        {
+            AccessToken = token,
+            Role = account.Role,
+            Email = account.Email,
+        };
         return response;
     }
 
