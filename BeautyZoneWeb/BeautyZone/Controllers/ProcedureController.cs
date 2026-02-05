@@ -38,16 +38,23 @@ public class ProcedureController : ControllerBase
     [Route("CreateProcedure")]
     public async Task<IActionResult> CreateProcedure([FromBody] ProcedureDto procedure)
     {
-        if (procedure == null) 
-            return BadRequest("Procedure data must be provided");
-        var created = await _procedureService.CreateProcedure(
-            new Procedure
-            {
-                Name = procedure.Name
-            });
-        if (created == null) 
-            return BadRequest("Procedure not created.");
-        return CreatedAtAction(nameof(GetProcedureById), new { id = created.Id }, created);
+        try
+        {
+            if (procedure == null)
+                return BadRequest("Procedure data must be provided");
+            var created = await _procedureService.CreateProcedure(
+                new Procedure
+                {
+                    Name = procedure.Name
+                });
+            if (created == null)
+                return BadRequest("Procedure not created.");
+            return CreatedAtAction(nameof(GetProcedureById), new { id = created.Id }, created);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"{ex.Message}");
+        }
     }
     [HttpPut]
     [Route("UpdateProcedure/{id}")]

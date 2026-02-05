@@ -20,7 +20,7 @@ public class ProcedureService : IProcedureService
     {
         var existing = await _procedureRepository.GetProcedureByName(procedure.Name);
         if (existing != null)
-            return existing;
+            throw new InvalidOperationException("Procedure already exist");
 
         await _procedureRepository.CreateProcedure(procedure);
         return procedure;
