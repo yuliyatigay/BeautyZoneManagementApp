@@ -53,7 +53,7 @@ public class ProcedureController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest($"{ex.Message}");
+            return Conflict(ex.Message);
         }
     }
     [HttpPut]

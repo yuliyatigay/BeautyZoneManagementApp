@@ -20,7 +20,7 @@ public class BeautyTechService : IBeautyTechService
     {
         var existing = await _beautyTechRepository.GetBeautyTechByPhoneNumber(beautyTech.PhoneNumber);
         if (existing != null)
-            return existing; 
+            throw new InvalidOperationException("BeautyTech already exist");
         await _beautyTechRepository.AddBeautyTechAsync(beautyTech);
         return beautyTech;
     }

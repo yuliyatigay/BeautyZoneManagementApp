@@ -42,18 +42,26 @@ public class BeautyTechController : ControllerBase
     [Route("AddBeautyTech")]
     public async Task<IActionResult> AddEmployee([FromBody] BeautyTechDto beautyTechDto)
     {
-        if (beautyTechDto == null)
-            return BadRequest("Beauty technician data must be provided");
-        var created = new BeautyTech
+        try
         {
-            Name = beautyTechDto.Name,
-            PhoneNumber = beautyTechDto.PhoneNumber,
-            Procedures = beautyTechDto.Procedures
-                .Select(id => new Procedure { Id = id })   
-                .ToList()
-        };
-        await _beautyTechService.AddBeautyTechAsync(created);
-        return CreatedAtAction(nameof(GetEmployeeById), new { id = created.Id }, created);
+            if (beautyTechDto == null)
+                return BadRequest("Beauty technician data must be provided");
+            var created = new BeautyTech
+            {
+                Name = beautyTechDto.Name,
+                PhoneNumber = beautyTechDto.PhoneNumber,
+                Procedures = beautyTechDto.Procedures
+                    .Select(id => new Procedure { Id = id })
+                    .ToList()
+            };
+            await _beautyTechService.AddBeautyTechAsync(created);
+            return CreatedAtAction(nameof(GetEmployeeById), new { id = created.Id }, created);
+        }
+        catch (Exception ex)
+        {
+            return Conflict(ex.Message);
+        }
+
     }
 
     [HttpPut]
