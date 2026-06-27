@@ -2,6 +2,17 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../BeautyZone-MAUI" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../BeautyZoneBlazorUI" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../ExpenseTracker" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../ExpenseTrackerBlazorUI" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../expensetracker-blazor" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../maui-toolkit" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../task-10-asp.net-core-mvc-app" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../task-11-incomeexpensetracker" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../task-8currencyexchangebot" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../task5-books" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../telegram-salon-bot" vcs="Git" />
   </component>
 </project>

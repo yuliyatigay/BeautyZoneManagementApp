@@ -21,16 +21,16 @@ public class BeautyTechRepository : IBeautyTechRepository
             .ToListAsync();
     }
 
-    public async Task AddBeautyTechAsync(BeautyTech beautyTech)
+    public async Task AddBeautyTechAsync(BeautyTech specialist)
     {
         var context = _dbContextFactory.CreateDbContext();
         
-        foreach (var procedure in beautyTech.Procedures)
+        foreach (var procedure in specialist.Procedures)
         {
             context.Attach(procedure);
         }
 
-        context.BeautyTechs.AddAsync(beautyTech);
+        context.BeautyTechs.AddAsync(specialist);
         await context.SaveChangesAsync();
     }
 
@@ -60,19 +60,19 @@ public class BeautyTechRepository : IBeautyTechRepository
     }
 
 
-    public async Task UpdateBeautyTechAsync(BeautyTech master)
+    public async Task UpdateBeautyTechAsync(BeautyTech specialist)
     {
         var context = _dbContextFactory.CreateDbContext();
 
         var existing = await context.BeautyTechs
             .Include(e => e.Procedures)
-            .FirstOrDefaultAsync(e => e.Id == master.Id);
-        existing.Name = master.Name;
-        existing.PhoneNumber = master.PhoneNumber;
+            .FirstOrDefaultAsync(e => e.Id == specialist.Id);
+        existing.Name = specialist.Name;
+        existing.PhoneNumber = specialist.PhoneNumber;
 
         existing.Procedures.Clear();
 
-        foreach (var pid in master.Procedures.Select(p => p.Id).Distinct())
+        foreach (var pid in specialist.Procedures.Select(p => p.Id).Distinct())
         {
             var procedure = await context.Procedures.FindAsync(pid);
             if (procedure != null)
@@ -83,10 +83,10 @@ public class BeautyTechRepository : IBeautyTechRepository
         await context.SaveChangesAsync();
     }
 
-    public async Task DeleteBeautyTechAsync(BeautyTech master)
+    public async Task DeleteBeautyTechAsync(BeautyTech specialist)
     {
         var context = _dbContextFactory.CreateDbContext();
-        context.BeautyTechs.Remove(master);
+        context.BeautyTechs.Remove(specialist);
         await context.SaveChangesAsync();
     }
 }

@@ -5,10 +5,10 @@ namespace Domain.RepositoryInterfaces;
 public interface IBeautyTechRepository
 {
     Task<List<BeautyTech>> FetchAllBeautyTechs();
-    Task AddBeautyTechAsync(BeautyTech beautyTech);
+    Task AddBeautyTechAsync(BeautyTech specialist);
     Task<BeautyTech> GetBeautyTechById(Guid id);
     Task<BeautyTech> GetBeautyTechByPhoneNumber(string number);
     Task<List<BeautyTech>> FetchBeautyTechsByProcedureName(string procedureName);
-    Task UpdateBeautyTechAsync(BeautyTech beautyTech);
-    Task DeleteBeautyTechAsync(BeautyTech beautyTech);
+    Task UpdateBeautyTechAsync(BeautyTech specialist);
+    Task DeleteBeautyTechAsync(BeautyTech specialist);
 }

@@ -12,6 +12,7 @@ public class AppDbContext : DbContext
     public DbSet<Procedure> Procedures { get; set; }
     public DbSet<BeautyTech> BeautyTechs { get; set; }
     public DbSet<Account> Accounts { get; set; }
+    public DbSet<Booking> Bookings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -19,6 +20,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Procedure>().ToTable("Procedures");
         modelBuilder.Entity<BeautyTech>().ToTable("BeautyTechs");
         modelBuilder.Entity<Account>().ToTable("Accounts");
+        modelBuilder.Entity<Booking>().ToTable("Bookings");
         
         modelBuilder.Entity<Account>()
             .Property(a => a.Role)
