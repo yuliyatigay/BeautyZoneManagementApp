@@ -6,5 +6,6 @@ public class UserResponse
 {
     public string? Email  { get; set; }
     public string AccessToken { get; set; }
+    public DateTime ExpiryTime { get; set; }
     public UserRole Role { get; set; }
 }

@@ -4,5 +4,5 @@ namespace Domain.ServicesInterfaces;
 
 public interface IJwtService
 {
-    string GenerateJwtToken(Account account);
+    TokenResult GenerateJwtToken(Account account);
 }

@@ -51,9 +51,10 @@ public class AccountService : IAccountService
         var token = _jwtService.GenerateJwtToken(account);
         var response = new UserResponse
         {
-            AccessToken = token,
+            AccessToken = token.AccessToken,
             Role = account.Role,
             Email = account.Email,
+            ExpiryTime = token.ExpiryTime
         };
         return response;
     }

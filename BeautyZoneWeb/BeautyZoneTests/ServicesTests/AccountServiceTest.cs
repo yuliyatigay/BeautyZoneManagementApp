@@ -109,6 +109,7 @@ public class AccountServiceTest
             PasswordHash = new PasswordHasher<Account>()
                 .HashPassword(null!, password)
         };
+        var expectedToken = new TokenResult( "jwt-token", new DateTime());
 
         _accountRepositoryMock
             .Setup(r => r.GetByEmail(account.Email))
@@ -116,13 +117,14 @@ public class AccountServiceTest
 
         _jwtServiceMock
             .Setup(j => j.GenerateJwtToken(account))
-            .Returns("jwt-token");
+            .Returns(expectedToken);
 
         var service = CreateService();
 
-        var token = await service.LoginAsync(account.Email, password);
+        var userResponse = await service.LoginAsync(account.Email, password);
+        var responseAccessToken = userResponse.AccessToken;
 
-        token.Should().Be("jwt-token");
+        responseAccessToken.Should().Be(expectedToken.AccessToken);
     }
 
     [Fact]

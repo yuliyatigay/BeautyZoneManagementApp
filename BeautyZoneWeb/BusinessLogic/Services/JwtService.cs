@@ -17,7 +17,7 @@ public class JwtService : IJwtService
         _authSettings = authSettings;
     }
 
-    public string GenerateJwtToken(Account account)
+    public TokenResult GenerateJwtToken(Account account)
     {
         var claims = new List<Claim>
         {
@@ -34,7 +34,9 @@ public class JwtService : IJwtService
             signingCredentials: new SigningCredentials(new SymmetricSecurityKey
                     (Encoding.UTF8.GetBytes(_authSettings.Value.SecretKey)),
                 SecurityAlgorithms.HmacSha256Signature));
-        return new JwtSecurityTokenHandler().WriteToken(jwtToken);
+        return new TokenResult(
+            new JwtSecurityTokenHandler().WriteToken(jwtToken),
+            jwtToken.ValidTo);
     }
 }
 public class AuthSettings

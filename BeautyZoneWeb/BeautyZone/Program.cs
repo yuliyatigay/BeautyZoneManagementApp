@@ -1,8 +1,6 @@
 using BeautyZone;
-using DataAccess.Data;
-using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.ConfigureServices(builder.Configuration);
@@ -21,16 +19,10 @@ builder.Services.AddSwaggerGen(options =>
         In = ParameterLocation.Header,
         Description = "JWT Authorization header using the Bearer scheme."
     });
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement {
+    options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+    {
         {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme, Id = "Bearer"
-                },
-                Scheme = "oauth2", Name = "Bearer", In = ParameterLocation.Header
-            },
+            new OpenApiSecuritySchemeReference("Bearer"),
             new List<string>()
         }
     });
